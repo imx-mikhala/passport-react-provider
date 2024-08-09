@@ -2,7 +2,7 @@ import { BiomeCombinedProviders } from "@biom3/react";
 import { ImmutableConfiguration, Environment } from "@imtbl/sdk/config";
 import { PassportProvider } from "@imtbl/sdk/passport";
 import { PassportMethods } from "./PassportMethods";
-import { Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Logout } from "./Logout";
 import { Redirect } from "./Redirect";
 
@@ -19,11 +19,13 @@ function App() {
   return (
     <BiomeCombinedProviders>
       <PassportProvider config={PassportModuleConfig}>
-        <Routes>
-          <Route path="/" element={<PassportMethods />} />
-          <Route path="/logout" element={<Logout />} />
-          <Route path="/redirect" element={<Redirect />} />
-        </Routes>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<PassportMethods />} />
+            <Route path="/logout" element={<Logout />} />
+            <Route path="/redirect" element={<Redirect />} />
+          </Routes>
+        </BrowserRouter>
       </PassportProvider>
     </BiomeCombinedProviders>
   )
