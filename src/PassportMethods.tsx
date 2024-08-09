@@ -1,37 +1,25 @@
 import { Body, Box, Button } from "@biom3/react";
 import { passport } from "@imtbl/sdk";
-import { providers } from "ethers";
-import { useState } from "react";
 
 export const PassportMethods = () => {
   const {
     passportInstance,
+    isLoggedIn,
+    login,
+    logout,
+    accounts,
   } = passport.usePassport();
-
-  const [passportWalletAddress, setPassportWalletAddress] = useState<string>("");
-  const [zkEvmProvider, setZkEvmProvider] = useState<providers.Web3Provider | null>(null);
 
   const onConnect = async () => {
     if (!passportInstance) {
       console.error('Passport instance not found.');
       return;
     }
-    const provider = passportInstance.connectEvm();
-    const [walletAddress] = await provider.request({
-      method: 'eth_requestAccounts',
-    });
-    setPassportWalletAddress(walletAddress);
-    setZkEvmProvider(new providers.Web3Provider(provider));
+    login();
   };
 
   const onLogout = async () => {
-    if (!passportInstance) {
-      console.error('Passport instance not found.');
-      return;
-    }
-    await passportInstance.logout();
-    setPassportWalletAddress("");
-    setZkEvmProvider(null);
+    logout();
   };
 
   const Spacer = () => <Box sx={{ paddingY: 'base.spacing.x2' }} />;
@@ -45,12 +33,12 @@ export const PassportMethods = () => {
         paddingY: 'base.spacing.x10'
       }}
     >
-      {!passportWalletAddress &&
+      {!isLoggedIn &&
         <Button onClick={onConnect} >
           Connect to Passport
         </Button>
       }
-      {passportWalletAddress && 
+      {isLoggedIn && 
         <Box
           sx={{
             display: 'flex',
@@ -58,7 +46,7 @@ export const PassportMethods = () => {
             alignItems: 'center',
           }}
         >
-          <Body>Wallet address: { passportWalletAddress }</Body>
+          <Body>Wallet address: { accounts[0] }</Body>
           <Spacer />
           <Button onClick={onLogout}>Logout</Button>
         </Box>
